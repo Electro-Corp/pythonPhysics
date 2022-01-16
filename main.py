@@ -4,6 +4,8 @@ import math
 #bg color
 bgcol = (234, 212, 252)
 (width,height) = (624,468)
+pygame.font.init() 
+myfont = pygame.font.SysFont('Comic Sans MS', 30)
 #vars
 drag = 0.999
 elasticity = 0.75
@@ -115,6 +117,7 @@ for n in range(number_of_particle):
 
 pygame.display.flip()
 selected_particle = None
+clock = pygame.time.Clock()
 
 running = True
 while running:
@@ -151,9 +154,15 @@ while running:
   for i, particle in enumerate(mypar):
     particle.move()
     particle.bounce()
+    clock.tick()
+    text = "FPS: " + str(clock.get_fps())
+    textsurface = myfont.render(text, False, (0, 0, 0))
+    screen.blit(textsurface,(0,0))
+
     for particle2 in mypar[i+1:]:
       
       collide(particle, particle2)
     particle.display()
   pygame.display.flip()
+  screen.blit(textsurface,(0,0))
 

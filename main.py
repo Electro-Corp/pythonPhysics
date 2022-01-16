@@ -8,6 +8,8 @@ bgcol = (234, 212, 252)
 drag = 0.999
 elasticity = 0.75
 gravity = (math.pi,0.0002)
+"""Init"""
+colorchange = 1 #change color dependent on how many bounce? 0=off 1=on
 #dimenzion/ windo
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('physics')
@@ -30,7 +32,10 @@ def collide(p1,p2):
   dy = p1.y -p2.y
   dist = math.hypot(dx,dy)
   if dist <p1.size + p2.size:
-    p1.color = (0,255,0)
+    p1.hitamount += 1
+    if colorchange == 1:
+      
+      p1.color = (0,(50+p1.hitamount),0)
     tangent = math.atan2(dy,dx)
     angle = 0.5*math.pi+tangent
     angle1 = 2*tangent  -p1.angle
@@ -44,11 +49,11 @@ def collide(p1,p2):
     p2.x -= math.sin(angle)
     p2.y += math.cos(angle)
   
-    p1.color = (0,0,255)
+  
     
 #Particle
 class par():
-  def __init__(self, (x,y),size,spot):
+  def __init__(self, (x,y),size,spot,hitamount):
     self.x = x
     self.y = y
     self.size = size
@@ -57,6 +62,7 @@ class par():
     self.speed = 0.01
     self.angle = 0
     self.spot = spot
+    self.hitamount = hitamount
   def display(self):
     pygame.draw.circle(screen,self.color,(self.x,self.y),self.size,self.thick)
 
@@ -69,6 +75,8 @@ class par():
 
   #bounce function....
   def bounce(self):
+
+    print("i got hit ",self.hitamount)
     if self.x > width - self.size:
       self.x = 2 *(width -self.size) -self.x
       self.angle = -self.angle
@@ -96,7 +104,7 @@ for n in range(number_of_particle):
 
   x = random.randint(size, width-size)
   y = random.randint(size, height-size)
-  particle = par((x,y),size,s)
+  particle = par((x,y),size,s,0)
   particle.speed = random.random()
   particle.angle = random.uniform(0,math.pi*2)
   particle.spot = n
@@ -119,7 +127,7 @@ while running:
       (mouseX, mouseY) = pygame.mouse.get_pos()
       selected_particle = findPar(mypar, mouseX, mouseY)
       if selected_particle:
-        print("particler! ")
+        
         
         selected_particle.color = (255,0,0)
     elif event.type == pygame.MOUSEBUTTONUP:
@@ -133,7 +141,7 @@ while running:
     dy = mouseY - selected_particle.y
     selected_particle.angle = 0.5*math.pi+math.atan2(dy,dx)
     selected_particle.speed = math.hypot(dx,dy)*0.1
-    print(selected_particle.spot)
+    
 
   screen.fill(bgcol)
   for par in mypar:

@@ -1,21 +1,10 @@
-import pygame
-import random
-import math
-#bg color
-bgcol = (234, 212, 252)
-(width,height) = (624,468)
-pygame.font.init() 
-myfont = pygame.font.SysFont('Comic Sans MS', 30)
-#vars
+import pygame, math, random
 drag = 0.999
 elasticity = 0.75
 gravity = (math.pi,0.0002)
+(width,height) = (624,468)
 """Init"""
 colorchange = 1 #change color dependent on how many bounce? 0=off 1=on
-#dimenzion/ windo
-screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption('physics')
-#def
 def addVectors((angle1, length1), (angle2, length2)):
   x = math.sin(angle1)*length1 +math.sin(angle2)*length2
   y = math.cos(angle1)*length1 +math.cos(angle2)*length2
@@ -66,8 +55,8 @@ class par():
     self.spot = spot
     self.hitamount = hitamount
   def display(self):
-    pygame.draw.circle(screen,self.color,(self.x,self.y),self.size,self.thick)
-
+    #pygame.draw.circle(screen,self.color,(self.x,self.y),self.size,self.thick)
+    pass
   def move(self):
     (self.angle, self.speed) = addVectors((self.angle, self.speed), gravity)
     self.x += math.sin(self.angle) * self.speed
@@ -96,76 +85,51 @@ class par():
       self.angle = math.pi - self.angle
       self.speed *= elasticity
 
-
-
-screen.fill(bgcol)
-
-#random
-number_of_particle = 10
 mypar = []
-s = 1
-for n in range(number_of_particle):
-  size = random.randint(10,20)
 
-  x = random.randint(size, width-size)
-  y = random.randint(size, height-size)
-  particle = par((x,y),size,s,0)
-  particle.speed = random.random()
-  particle.angle = random.uniform(0,math.pi*2)
-  particle.spot = n
+class envi:
+  def __init__(self,(width,height)):
+    self.width = width
+    self.height = height
+    self.particles = []
+
+    self.color = (255,255,255)
+    self.elasticity = 0.75
+  def addParticle(self, n=1, **kargs):
+    for i in range (n):
+      size = kargs.get('size', random.randint(10,20))
+      mass = kargs.get('mass', random.randint(100,10000))
+      x = kargs.get('x',random.uniform(size, self.width-size))
+      y = kargs.get('y',random.uniform(size,self.height-size))
+      p = par((x,y),size,0,4)
+      p.speed = kargs.get('speed',random.random())
+      p.angle = kargs.get('angle', random.uniform(0, math.pi*2))
+      self.particles.append(p)
+  def bounce(self,particle):
   
-  mypar.append(particle)
-#for par in mypar:
-#  par.display()
+      print("i got hit ",particle.hitamount)
+      if particle.x > width - particle.size:
+        particle.x = 2 *(width -particle.size) -particle.x
+        particle.angle = -particle.angle
+        particle.speed *= elasticity
+      elif particle.x < particle.size:
+        particle.x = 2* particle.size -particle.x
+        particle.angle = -particle.angle
+        particle.speed *= elasticity
+      if particle.y > height - particle.size:
+        particle.y = 2 *(height -particle.size) -particle.y
+        particle.angle = math.pi -particle.angle
+        particle.speed *= elasticity
+      elif particle.y < particle.size:
+        particle.y = 2* particle.size -particle.y
+        particle.angle = math.pi - particle.angle
+        particle.speed *= elasticity    
+      
+  def update(self):
+    for i, particle in enumerate(self.particles):
+        particle.move()
+        self.bounce(particle)
+        for particle2 in self.particles[i+1:]:
+            collide(particle, particle2)
 
-pygame.display.flip()
-selected_particle = None
-clock = pygame.time.Clock()
-
-running = True
-while running:
   
-  for event in pygame.event.get():
-    if event.type == pygame.QUIT:
-      running = False
-    elif event.type == pygame.MOUSEBUTTONDOWN:
-      
-      (mouseX, mouseY) = pygame.mouse.get_pos()
-      selected_particle = findPar(mypar, mouseX, mouseY)
-      if selected_particle:
-        
-        
-        selected_particle.color = (255,0,0)
-    elif event.type == pygame.MOUSEBUTTONUP:
-      if selected_particle != None:
-        selected_particle.color = (0,0,255)
-      selected_particle = None
-  if selected_particle:
-    
-    (mouseX,mouseY) = pygame.mouse.get_pos()
-    dx = mouseX - selected_particle.x
-    dy = mouseY - selected_particle.y
-    selected_particle.angle = 0.5*math.pi+math.atan2(dy,dx)
-    selected_particle.speed = math.hypot(dx,dy)*0.1
-    
-
-  screen.fill(bgcol)
-  for par in mypar:
-    par.move()
-    par.display()
-    par.bounce()
-  for i, particle in enumerate(mypar):
-    particle.move()
-    particle.bounce()
-    clock.tick()
-    text = "FPS: " + str(clock.get_fps())
-    textsurface = myfont.render(text, False, (0, 0, 0))
-    screen.blit(textsurface,(0,0))
-
-    for particle2 in mypar[i+1:]:
-      
-      collide(particle, particle2)
-    particle.display()
-  pygame.display.flip()
-  screen.blit(textsurface,(0,0))
-

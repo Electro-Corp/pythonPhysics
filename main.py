@@ -9,9 +9,9 @@ myfont = pygame.font.SysFont('Comic Sans MS', 30)
 #vars
 drag = 0.999
 elasticity = 0.75
-gravity = (math.pi,0.0002)
+gravity = (math.pi,0.002)
 """Init"""
-colorchange = 1 #change color dependent on how many bounce? 0=off 1=on
+colorchange = 0 #change color dependent on how many bounce? 0=off 1=on
 #dimenzion/ windo
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('physics')

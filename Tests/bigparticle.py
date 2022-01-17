@@ -1,6 +1,6 @@
 """
-MAIN.py
-Main file for particle sim. The library file is "particle.py"
+BIGPARTICLE
+Test to see bigger particles. 
 """
 
 import pygame
@@ -8,13 +8,13 @@ import random
 import math
 #bg color
 bgcol = (234, 212, 252)
-(width,height) = (480,360)
+(width,height) = (624,468)
 pygame.font.init() 
 myfont = pygame.font.SysFont('Sans Serif', 30)
 #vars
 drag = 0.999
 elasticity = 0.75
-gravity = (math.pi,0.0002)
+gravity = (math.pi,0.002)
 # light shade of the button
 color_light = (170,170,170)
   
@@ -50,7 +50,7 @@ def collide(p1,p2):
       p1.color = (0,(50+p1.hitamount),0)
     tangent = math.atan2(dy,dx)
     angle = 0.5*math.pi+tangent
-    angle1 = 2*tangent - p1.angle
+    angle1 = 2*tangent  -p1.angle
     angle2 = 2*tangent - p2.angle
     speed1 = p2.speed*elasticity 
     speed2 = p1.speed*elasticity
@@ -65,17 +65,6 @@ def collide(p1,p2):
     
 #Particle
 class par():
-  def __call__(self,(x,y),size,spot,hitamount):
-
-    self.x = x
-    self.y = y
-    self.size = size
-    self.color = (0,0,255)
-    self.thick = 50
-    self.speed = 0.01
-    self.angle = 0
-    self.spot = spot
-    self.hitamount = hitamount
   def __init__(self, (x,y),size,spot,hitamount):
     self.x = x
     self.y = y
@@ -86,7 +75,6 @@ class par():
     self.angle = 0
     self.spot = spot
     self.hitamount = hitamount
-
   def display(self):
     pygame.draw.circle(screen,self.color,(self.x,self.y),self.size,self.thick)
 
@@ -119,17 +107,17 @@ class par():
       self.y = 2* self.size -self.y
       self.angle = math.pi - self.angle
       self.speed *= elasticity
-  
+
 
 
 screen.fill(bgcol)
 
 #random
-number_of_particle = 25
+number_of_particle = 5
 mypar = []
 s = 1
 for n in range(number_of_particle):
-  size = random.randint(10,20)
+  size = random.randint(100,101)
 
   x = random.randint(size, width-size)
   y = random.randint(size, height-size)
@@ -145,32 +133,10 @@ for n in range(number_of_particle):
 pygame.display.flip()
 selected_particle = None
 clock = pygame.time.Clock()
-# for adding more particle
-def generatePar():
-  number_of_particle = 1
-  mypar = []
-  s = 1
-  for n in range(number_of_particle):
-    size = random.randint(10,20)
-  
-    x = random.randint(size, width-size)
-    y = random.randint(size, height-size)
-    #particle = par((x,y),size,s,0)
-    #particle.speed = random.random()
-    #particle.angle = random.uniform(0,math.pi*0.2)
-    #particle.spot = n
-    
-    #mypar.append(particle)
-def increaseSize(amount):
-  (width,height) = (400*amount,300*amount)
-  screen = pygame.display.set_mode((width, height))
+
 running = True
 while running:
-  key_to_function = {
-      pygame.K_LEFT:   (generatePar()),
-      #pygame.K_EQUALS:   (increaseSize(1.3)),
-      #pygame.K_MINUS: (increaseSize(0.3))
-  }
+  
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
       running = False
@@ -186,11 +152,6 @@ while running:
       if selected_particle != None:
         selected_particle.color = (0,0,255)
       selected_particle = None
-    elif event.type == pygame.KEYDOWN:
-      if event.key in key_to_function:
-          key_to_function[event.key]
-          print("button used lol")
-          
   if selected_particle:
     
     (mouseX,mouseY) = pygame.mouse.get_pos()
@@ -220,7 +181,7 @@ while running:
     except AttributeError:
       numbertext = "Ball Selected: None"
       number2 = "X:    Y: "
-      
+      pass
   else:
     numbertext = "None"
   text3 = myfont.render(numbertext,False,(0,50,0))

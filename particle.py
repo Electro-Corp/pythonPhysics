@@ -1,7 +1,12 @@
+"""
+PARTICLE.py
+This is the library file that is needed to be included inorder to use particle physics.
+"""
+
 import pygame, math, random
 drag = 0.999
 elasticity = 0.75
-gravity = (math.pi,0.0002)
+gravity = (math.pi,0.002)
 (width,height) = (624,468)
 """Init"""
 colorchange = 1 #change color dependent on how many bounce? 0=off 1=on

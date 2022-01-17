@@ -5,7 +5,7 @@ import math
 bgcol = (234, 212, 252)
 (width,height) = (624,468)
 pygame.font.init() 
-myfont = pygame.font.SysFont('Comic Sans MS', 30)
+myfont = pygame.font.SysFont('Sans Serif', 30)
 #vars
 drag = 0.999
 elasticity = 0.75
@@ -171,7 +171,7 @@ while running:
   if number_of_particle:
     #print("passed")
     try:
-      numbertext = str(selected_particle.spot)
+      numbertext = "Ball Selected: " + str(selected_particle.spot)
     except AttributeError:
       numbertext = "None"
       pass

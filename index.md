@@ -1,4 +1,4 @@
-## Python Physucs
+## Python Physics
 Basic Python physics library. 
 Must have pygame installed. 
 Sketon program is included. It is `skel.py` <br>

@@ -10,6 +10,11 @@ myfont = pygame.font.SysFont('Comic Sans MS', 30)
 drag = 0.999
 elasticity = 0.75
 gravity = (math.pi,0.002)
+# light shade of the button
+color_light = (170,170,170)
+  
+# dark shade of the button
+color_dark = (100,100,100)
 """Init"""
 colorchange = 0 #change color dependent on how many bounce? 0=off 1=on
 #dimenzion/ windo
@@ -73,12 +78,14 @@ class par():
     self.x += math.sin(self.angle) * self.speed
     self.y -= math.cos(self.angle) * self.speed
     self.speed *=drag
+  def __call__(self):
+    print("called")
     
 
   #bounce function....
   def bounce(self):
 
-    print("i got hit ",self.hitamount)
+    #print("i got hit ",self.hitamount)
     if self.x > width - self.size:
       self.x = 2 *(width -self.size) -self.x
       self.angle = -self.angle
@@ -101,7 +108,7 @@ class par():
 screen.fill(bgcol)
 
 #random
-number_of_particle = 10
+number_of_particle = 50
 mypar = []
 s = 1
 for n in range(number_of_particle):
@@ -146,7 +153,7 @@ while running:
     dx = mouseX - selected_particle.x
     dy = mouseY - selected_particle.y
     selected_particle.angle = 0.5*math.pi+math.atan2(dy,dx)
-    selected_particle.speed = math.hypot(dx,dy)*0.1
+    selected_particle.speed = math.hypot(dx,dy)*0.2
     
 
   screen.fill(bgcol)
@@ -157,10 +164,28 @@ while running:
   for i, particle in enumerate(mypar):
     particle.move()
     particle.bounce()
-    clock.tick()
-    text = "FPS: " + str(clock.get_fps())
-    textsurface = myfont.render(text, False, (0, 0, 0))
-    screen.blit(textsurface,(0,0))
+  clock.tick()
+  text = "FPS: " + str(clock.get_fps())
+  textsurface = myfont.render(text, False, (0, 20, 0))
+  text2 = myfont.render("Ball Physics 1.0",False,(0,0,0))
+  if number_of_particle:
+    #print("passed")
+    try:
+      numbertext = str(selected_particle.spot)
+    except AttributeError:
+      numbertext = "None"
+      pass
+  else:
+    numbertext = "None"
+  text3 = myfont.render(numbertext,False,(0,50,0))
+  screen.blit(textsurface,(0,20))
+  screen.blit(text2,(0,0))
+  screen.blit(text3,(0,50))
+  mouse = pygame.mouse.get_pos()
+  for i, particle in enumerate(mypar):
+    particle.move()
+    particle.bounce()
+
 
     for particle2 in mypar[i+1:]:
       

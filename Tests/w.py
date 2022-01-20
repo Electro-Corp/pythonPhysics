@@ -1,6 +1,6 @@
 """
 MAIN.py
-Example/Test file for myself for particle sim. The MAIN REQUIRED file is "particle.py"
+Main file for particle sim. The library file is "particle.py"
 """
 
 import pygame
@@ -52,10 +52,10 @@ def collide(p1, p2):
         if colorchange == 1:
 
             p1.color = (0, (50 + p1.hitamount), 0)
-        tangent = math.atan2(dy, dx) #atan2
-        angle = 0.5 * math.pi + tangent
-        angle1 = 2 * tangent - p1.angle
-        angle2 = 2 * tangent - p2.angle
+        tangent = math.hypot(dy, dx) #atan2
+        angle = 0.5 * math.pi - tangent
+        angle1 = 2 / tangent - p1.angle
+        angle2 = 2 / tangent + p2.angle
         speed1 = p2.speed * elasticity
         speed2 = p1.speed * elasticity
         (p1.angle, p1.speed) = (angle1, speed1)
@@ -130,7 +130,7 @@ class par():
 screen.fill(bgcol)
 
 #random
-number_of_particle = str(raw_input("How many balls: "))
+number_of_particle = "d"
 if (number_of_particle != "d"):
     number_of_particle = int(number_of_particle)
     mypar = []
@@ -216,7 +216,7 @@ while running:
         dx = mouseX - selected_particle.x
         dy = mouseY - selected_particle.y
         selected_particle.angle = 0.5 * math.pi + math.atan2(dy, dx)
-        selected_particle.speed = math.hypot(dy, dx) * 0.5
+        selected_particle.speed = math.hypot(dx, dy) * 0.5
 
     screen.fill(bgcol)
     for par in mypar:

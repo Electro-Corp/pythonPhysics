@@ -20,3 +20,9 @@ The library file that is needed to be included is `particle.py`. <br>
  "env.addParticle(x=5, y=10, speed=1.5, angle=0.8, size=4, mass=1000)"
  
  <br> ^ Creating particle 
+ 
+ 
+ 
+ 
+ <br>
+ https://electro-corp.github.io/pythonPhysics/ Website
